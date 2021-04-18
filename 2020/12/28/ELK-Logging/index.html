@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"viberring.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="SpringBoot Logstash ELK Configuration">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ELK-Logging">
+<meta property="og:url" content="https://viberring.github.io/2020/12/28/ELK-Logging/index.html">
+<meta property="og:site_name" content="viber">
+<meta property="og:description" content="SpringBoot Logstash ELK Configuration">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-12-28T00:45:09.000Z">
+<meta property="article:modified_time" content="2020-12-28T00:45:09.000Z">
+<meta property="article:author" content="viber">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://viberring.github.io/2020/12/28/ELK-Logging/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>ELK-Logging | viber</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">viber</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">the way to the future</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2020/12/28/ELK-Logging/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="viber">
+      <meta itemprop="description" content="rest in peace">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="viber">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ELK-Logging
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-12-28 08:45:09" itemprop="dateCreated datePublished" datetime="2020-12-28T08:45:09+08:00">2020-12-28</time>
+            </span>
+
+          
+            <div class="post-description">SpringBoot Logstash ELK Configuration</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="This-is-a-simple-configuration-for-Log4j2-amp-Logstach-amp-ELK"><a href="#This-is-a-simple-configuration-for-Log4j2-amp-Logstach-amp-ELK" class="headerlink" title="This is a simple configuration for Log4j2 &amp; Logstach &amp; ELK"></a>This is a simple configuration for Log4j2 &amp; Logstach &amp; ELK</h1><h1 id="INSTALL-STEPS"><a href="#INSTALL-STEPS" class="headerlink" title="INSTALL STEPS"></a>INSTALL STEPS</h1><h2 id="Install-Logstatch"><a href="#Install-Logstatch" class="headerlink" title="Install Logstatch"></a>Install Logstatch</h2><h4 id="Officail-Download"><a href="#Officail-Download" class="headerlink" title="Officail Download"></a>Officail Download</h4><pre><code> https://www.elastic.co/downloads/logstash
+</code></pre>
+<h4 id="Run-logstash-with-config-file"><a href="#Run-logstash-with-config-file" class="headerlink" title="Run logstash with config file"></a>Run logstash with config file</h4><ol>
+<li>change directory into logstash/bin<br><code>cd /pathto/logstach/bin</code></li>
+<li>install logstach’s amazon plugin<br>git: <a target="_blank" rel="noopener" href="https://github.com/awslabs/logstash-output-amazon_es">https://github.com/awslabs/logstash-output-amazon_es</a><br>install: <code>./logstash-plugin install logstach-output-amazon_es</code></li>
+<li>change directory into logstash/config and create config file  <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">touch log4j2-gelf.conf</span><br><span class="line">vim log4j2-gel.conf</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">input &#123;</span><br><span class="line">    gelf &#123;</span><br><span class="line">        host &#x3D;&gt; &quot;127.0.0.1&quot;</span><br><span class="line">        port &#x3D;&gt; 9998</span><br><span class="line">        type &#x3D;&gt; gelf</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">filter &#123;</span><br><span class="line">    if([application] &#x3D;~ &quot;^\$&quot;) &#123;</span><br><span class="line">        drop&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    grok &#123;&#125;</span><br><span class="line">    translate &#123;</span><br><span class="line">        field &#x3D;&gt; &quot;[level]&quot;</span><br><span class="line">        destination &#x3D;&gt; &quot;[levelName]&quot;</span><br><span class="line">        dictionary &#x3D;&gt; &#123;</span><br><span class="line">            &quot;0&quot; &#x3D;&gt; &quot;EMERG&quot;</span><br><span class="line">            &quot;1&quot; &#x3D;&gt; &quot;ALERT&quot;</span><br><span class="line">            &quot;2&quot; &#x3D;&gt; &quot;CRITICAL&quot;</span><br><span class="line">            &quot;3&quot; &#x3D;&gt; &quot;ERROR&quot;</span><br><span class="line">            &quot;4&quot; &#x3D;&gt; &quot;WARN&quot;</span><br><span class="line">            &quot;5&quot; &#x3D;&gt; &quot;NOTICE&quot;</span><br><span class="line">            &quot;6&quot; &#x3D;&gt; &quot;INFO&quot;</span><br><span class="line">            &quot;7&quot; &#x3D;&gt; &quot;DEBUG&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    mutate &#123;</span><br><span class="line">        lowercase &#x3D;&gt; [ &quot;host&quot; ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">    stdout &#123;</span><br><span class="line">        codec &#x3D;&gt; rubydebug</span><br><span class="line">    &#125;</span><br><span class="line">    amazon_es &#123;</span><br><span class="line">        hosts &#x3D;&gt; [ &quot;your host&quot; ]</span><br><span class="line">        aws_access_key_id &#x3D;&gt; &quot;AKIAXI6NVJUIVJ3AF34Y&quot;</span><br><span class="line">        aws_secret_access_key &#x3D;&gt; &quot;your access key&quot;</span><br><span class="line">        index &#x3D;&gt; &quot;app-%&#123;application&#125;&#x3D;%&#123;+YYYY.MM.dd&#125;-%&#123;[host]&#125;&quot;</span><br><span class="line">        region &#x3D;&gt; &quot;ap-southease-1&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Spring-config"><a href="#Spring-config" class="headerlink" title="Spring config"></a>Spring config</h2><h3 id="add-log4j2-dependencies"><a href="#add-log4j2-dependencies" class="headerlink" title="add log4j2 dependencies"></a>add log4j2 dependencies</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- log4j2 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-log4j2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--  load log4j2.yml   --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.dataformat<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-dataformat-yaml<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- logstash --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>biz.paluch.logging<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>logstash-gelf<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.14.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="write-log4j2-yml-file"><a href="#write-log4j2-yml-file" class="headerlink" title="write log4j2 yml file"></a>write log4j2 yml file</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Configuration:</span></span><br><span class="line">    <span class="attr">status:</span> <span class="string">warn</span></span><br><span class="line">    <span class="attr">Properties:</span></span><br><span class="line">        <span class="attr">property:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">LOG_PATTERN</span></span><br><span class="line">              <span class="attr">value:</span> <span class="string">&quot;%d&#123;HH:mm:ss.SSS&#125; %-5level %class&#123;36&#125; %L %M - %msg%xEx%n&quot;</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">ENVIRONMENT</span></span><br><span class="line">              <span class="attr">value:</span> <span class="string">DEFAULT</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">Appenders:</span></span><br><span class="line">        <span class="attr">Console:</span></span><br><span class="line">            <span class="attr">name:</span> <span class="string">Console</span></span><br><span class="line">            <span class="attr">target:</span> <span class="string">SYSTEM_OUT</span></span><br><span class="line">            <span class="attr">PatternLayout:</span></span><br><span class="line">                <span class="attr">pattern:</span> <span class="string">$&#123;LOG_PATTERN&#125;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">Gelf:</span></span><br><span class="line">            <span class="attr">name:</span> <span class="string">logstash-gelf</span></span><br><span class="line">            <span class="attr">host:</span> <span class="string">udp:192.168.56.1</span></span><br><span class="line">            <span class="attr">port:</span> <span class="number">8888</span></span><br><span class="line">            <span class="attr">ignoreExceptions:</span> <span class="literal">false</span></span><br><span class="line">            <span class="attr">Field:</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">application</span></span><br><span class="line">                  <span class="attr">pattern:</span> <span class="string">&quot;$&#123;ctx:application&#125;&quot;</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">timestamp</span></span><br><span class="line">                  <span class="attr">pattern:</span> <span class="string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125;&quot;</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">logger</span></span><br><span class="line">                  <span class="attr">pattern:</span> <span class="string">&quot;%logger&quot;</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">level</span></span><br><span class="line">                  <span class="attr">pattern:</span> <span class="string">&quot;%level&quot;</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">simpleClassName</span></span><br><span class="line">                  <span class="attr">pattern:</span> <span class="string">&quot;%C&#123;1&#125;&quot;</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">className</span></span><br><span class="line">                  <span class="attr">pattern:</span> <span class="string">&quot;%C&quot;</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">host</span></span><br><span class="line">                  <span class="attr">pattern:</span> <span class="string">&quot;%host&#123;lowerCase=true&#125;&quot;</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">exception</span></span><br><span class="line">                  <span class="attr">pattern:</span> <span class="string">&quot;%ex&quot;</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">environment</span></span><br><span class="line">                  <span class="attr">pattern:</span> <span class="string">&quot;$&#123;ENVIRONMENT&#125;&quot;</span></span><br><span class="line">    <span class="attr">Loggers:</span></span><br><span class="line">        <span class="attr">Root:</span></span><br><span class="line">            <span class="attr">level:</span> <span class="string">INFO</span></span><br><span class="line">            <span class="attr">AppenderRef:</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">ref:</span> <span class="string">Console</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">ref:</span> <span class="string">logstash-gelf</span></span><br></pre></td></tr></table></figure>
+<h3 id="With-Dockerfile"><a href="#With-Dockerfile" class="headerlink" title="With Dockerfile"></a>With Dockerfile</h3><figure class="highlight docker"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ENV</span> APPLICATION=<span class="string">&#x27;your-application-name&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="Add-Log4j2EventListener"><a href="#Add-Log4j2EventListener" class="headerlink" title="Add Log4j2EventListener"></a>Add Log4j2EventListener</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Log4jEventListener</span> <span class="keyword">implements</span>  <span class="title">GenericApplicationListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_ORDER = Ordered.HIGHEST_PRECEDENCE + <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Class&lt;?&gt;[] EVENT_TYPES = &#123; ApplicationStartingEvent.class, ApplicationEnvironmentPreparedEvent.class,</span><br><span class="line">            ApplicationPreparedEvent.class, ContextClosedEvent.class, ApplicationFailedEvent.class &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Class&lt;?&gt;[] SOURCE_TYPES = &#123; SpringApplication.class, ApplicationContext.class &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onApplicationEvent</span><span class="params">(ApplicationEvent event)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (event <span class="keyword">instanceof</span> ApplicationEnvironmentPreparedEvent) &#123;</span><br><span class="line">            ConfigurableEnvironment environment = ((ApplicationEnvironmentPreparedEvent) event).getEnvironment();</span><br><span class="line">            String application = environment.getProperty(<span class="string">&quot;spring.application.name&quot;</span>);</span><br><span class="line">            <span class="keyword">if</span> (StringUtils.isNotBlank(application)) &#123;</span><br><span class="line">                MDC.put(<span class="string">&quot;application&quot;</span>, application);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getOrder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> DEFAULT_ORDER;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supportsEventType</span><span class="params">(ResolvableType resolvableType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> isAssignableFrom(resolvableType.getRawClass(), EVENT_TYPES);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supportsSourceType</span><span class="params">(Class&lt;?&gt; sourceType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> isAssignableFrom(sourceType, SOURCE_TYPES);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isAssignableFrom</span><span class="params">(Class&lt;?&gt; type, Class&lt;?&gt;... supportedTypes)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (type != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (Class&lt;?&gt; supportedType : supportedTypes) &#123;</span><br><span class="line">                <span class="keyword">if</span> (supportedType.isAssignableFrom(type)) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Register-EventListener"><a href="#Register-EventListener" class="headerlink" title="Register EventListener"></a>Register EventListener</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication(scanBasePackages = GlobalConst.SCAN_BASE_PACKAGE)</span></span><br><span class="line"><span class="meta">@EnableEurekaClient</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PaymentRestApiApplication</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        TimeZone.setDefault(TimeZone.getTimeZone(<span class="string">&quot;America/New_York&quot;</span>));</span><br><span class="line">        SpringApplication app = <span class="keyword">new</span> SpringApplication(PaymentRestApiApplication.class);</span><br><span class="line">        app.addListeners(<span class="keyword">new</span> Log4jEventListener());</span><br><span class="line">        app.run(args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Multi-Log4j2-profile"><a href="#Multi-Log4j2-profile" class="headerlink" title="Multi-Log4j2-profile"></a>Multi-Log4j2-profile</h2><p>configure file path in bootstrap.yml or application.yml<br>then create new log4j2-xxx.yml file according to your develop environment.<br>example:</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span> <span class="string">local-v3</span></span><br><span class="line"><span class="attr">arb:</span></span><br><span class="line">  <span class="attr">eureka:</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">localhost</span></span><br><span class="line">  <span class="attr">service:</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">localhost</span></span><br><span class="line"><span class="attr">logging:</span></span><br><span class="line">  <span class="attr">config:</span> <span class="string">classpath:log4j2-local-v3.yml</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/28/SpringStrategyDemo/" rel="prev" title="Strategy Pattern">
+      <i class="fa fa-chevron-left"></i> Strategy Pattern
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/28/value_vs_reference/" rel="next" title="value or reference">
+      value or reference <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#This-is-a-simple-configuration-for-Log4j2-amp-Logstach-amp-ELK"><span class="nav-number">1.</span> <span class="nav-text">This is a simple configuration for Log4j2 &amp; Logstach &amp; ELK</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#INSTALL-STEPS"><span class="nav-number">2.</span> <span class="nav-text">INSTALL STEPS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-Logstatch"><span class="nav-number">2.1.</span> <span class="nav-text">Install Logstatch</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Officail-Download"><span class="nav-number">2.1.0.1.</span> <span class="nav-text">Officail Download</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Run-logstash-with-config-file"><span class="nav-number">2.1.0.2.</span> <span class="nav-text">Run logstash with config file</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-config"><span class="nav-number">2.2.</span> <span class="nav-text">Spring config</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#add-log4j2-dependencies"><span class="nav-number">2.2.1.</span> <span class="nav-text">add log4j2 dependencies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#write-log4j2-yml-file"><span class="nav-number">2.2.2.</span> <span class="nav-text">write log4j2 yml file</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#With-Dockerfile"><span class="nav-number">2.2.3.</span> <span class="nav-text">With Dockerfile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Add-Log4j2EventListener"><span class="nav-number">2.2.4.</span> <span class="nav-text">Add Log4j2EventListener</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Register-EventListener"><span class="nav-number">2.2.5.</span> <span class="nav-text">Register EventListener</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multi-Log4j2-profile"><span class="nav-number">2.3.</span> <span class="nav-text">Multi-Log4j2-profile</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">viber</p>
+  <div class="site-description" itemprop="description">rest in peace</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">viber</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
