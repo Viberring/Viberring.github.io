@@ -214,7 +214,79 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="UUID"><a href="#UUID" class="headerlink" title="UUID"></a>UUID</h1><h1 id="Snowflake"><a href="#Snowflake" class="headerlink" title="Snowflake"></a>Snowflake</h1>
+        <h1 id="Why"><a href="#Why" class="headerlink" title="Why"></a>Why</h1><pre><code>When it comes to ID generator, the DB AUTO_INCREMENT strategy hit me first.
+But with the data growing, we need shard data and transfer data, so here comes
+the problem.
+    - id conflict
+      when we shard data, we will insert data into many dbs the same time 
+      and every single row of data should have a unique id.
+      And if we use auto_incremnt then the id will duplicate.
+      
+</code></pre>
+<h1 id="Prerequisite"><a href="#Prerequisite" class="headerlink" title="Prerequisite"></a>Prerequisite</h1><pre><code>- ID is sortable
+- ID should be 64 bits (for smaller indexes, and better storage in systems like Redis)
+- Minimize changes
+</code></pre>
+<h1 id="Solutions"><a href="#Solutions" class="headerlink" title="Solutions"></a>Solutions</h1><h2 id="Inside-Web-Application-gt-UUID"><a href="#Inside-Web-Application-gt-UUID" class="headerlink" title="Inside Web Application =&gt; UUID"></a>Inside Web Application =&gt; UUID</h2><h3 id="Pros"><a href="#Pros" class="headerlink" title="Pros:"></a>Pros:</h3><pre><code>1. each thread generates IDs independently, minimizing points
+   of failure and contention for ID generation
+2. use timestamp as the first component of the ID, the IDs remain time-sortable
+</code></pre>
+<h3 id="Cons"><a href="#Cons" class="headerlink" title="Cons:"></a>Cons:</h3><pre><code>1. need more storage space to make reasonable uniqueness guarantees
+2. some UUID types are completely random and have no natural sort
+</code></pre>
+<h2 id="ID-Generation-Service-Snowflake"><a href="#ID-Generation-Service-Snowflake" class="headerlink" title="ID Generation Service (Snowflake)"></a>ID Generation Service (Snowflake)</h2><h3 id="Pros-1"><a href="#Pros-1" class="headerlink" title="Pros:"></a>Pros:</h3><pre><code>1. Snowflake IDs are 64-bits
+2. remain sortable
+3. Distributed system that can survive nodes dying
+</code></pre>
+<h3 id="Cons-1"><a href="#Cons-1" class="headerlink" title="Cons:"></a>Cons:</h3><pre><code>1. introduce additional complexity and more `changes` into system
+2. snowflake algorithm strongly depends on machine clock. If the clock is dialed back on the machine, it will result in duplicate calls or the service will be unavailable. 
+</code></pre>
+<h2 id="Persistence-Layer-Generated-IDs"><a href="#Persistence-Layer-Generated-IDs" class="headerlink" title="Persistence Layer Generated IDs"></a>Persistence Layer Generated IDs</h2><h3 id="Pros-2"><a href="#Pros-2" class="headerlink" title="Pros:"></a>Pros:</h3><pre><code>1. alleviate the problem of having to generate unique IDs in application code
+</code></pre>
+<h3 id="Cons-2"><a href="#Cons-2" class="headerlink" title="Cons:"></a>Cons:</h3><pre><code>1. performance problems
+2. the generated id need a roudtrip from db to code
+</code></pre>
+<h2 id="DB-Ticket-Servers"><a href="#DB-Ticket-Servers" class="headerlink" title="DB Ticket Servers"></a>DB Ticket Servers</h2><h3 id="Pros-3"><a href="#Pros-3" class="headerlink" title="Pros:"></a>Pros:</h3><pre><code>1. Isolate from app and have pretty predictable scaling factors
+</code></pre>
+<h3 id="Cons-3"><a href="#Cons-3" class="headerlink" title="Cons:"></a>Cons:</h3><pre><code>1. Can eventually become a write bottleneck
+2. If using a single DB, becomes single point of failure. 
+If using multiple DBs, can no longer guarantee that they are sortable over time.  
+</code></pre>
+<h1 id="UUID-8byte-128bits"><a href="#UUID-8byte-128bits" class="headerlink" title="UUID (8byte == 128bits)"></a>UUID (8byte == 128bits)</h1><pre><code>UUID (aka Univeral Unique Identifiers) is a 128-bits number.
+A UUID is a synthetic ID comprising of several distinct parts, 
+such as time, MAC address, or an MD5 hashed namespace.
+EX: `ccb717a7-78d6-4e04-a2b7-739f02edfb08`
+
+&gt; UUID can be generated in isolation and still gurantee uniqueness 
+in a distributed environment.
+
+&gt; UUIDs require extra storage and may negatively affect your querying performance
+</code></pre>
+<h1 id="Snowflake"><a href="#Snowflake" class="headerlink" title="Snowflake"></a>Snowflake</h1><pre><code>ID server for generating unique IDs for your distributed infrastructure.
+It can be single server or cluster of servers to gnerate numbers.
+The generated ids were composed of:
+    1. Bit 1 occupies 1 bit, and its value is always 0, 
+       which can be regarded as the symbol bit is not used.
+    2. The first 41 bits are timestamps, and the 41-bit bits represent 2 ^ 41 numbers, 
+       each representing milliseconds. Then the time available for snowflake 
+       algorithm is (1L &lt; 41)/(1000L360024 * 365)= 69 years.
+    3. The 10-bit bit bit in the middle represents the number of machines, 
+       i.e. 2 ^ 10 = 1024 machines, but in general we do not deploy such machines. 
+       If we need IDC (Internet Data Center), we can also give IDC 10-bit 5-bit 
+       and work machine 5-bit. In this way, 32 IDCs can be represented, 
+       each IDC can have 32 machines, specific partition 
+       can be defined according to their own needs.
+    4. The last 12-bit bit is a self-increasing sequence, 
+       which can represent 2 ^ 12 = 4096 numbers.
+
+- Such partitioning is equivalent to generating 4096 orderly, 
+  non-repetitive IDs on a machine in a data center in a millisecond.
+- But we certainly have more than one IDC and machine, 
+  so the number of ordered IDs that can be generated in milliseconds is doubled.
+</code></pre>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p><a target="_blank" rel="noopener" href="https://github.com/Viberring/THE-WAY-TO-THE-FUTURE/blob/master/java/IVQ/Snow.java">snowflake</a><br><a target="_blank" rel="noopener" href="https://github.com/Viberring/THE-WAY-TO-THE-FUTURE/blob/master/java/IVQ/Snowflake.java">better snowflake</a></p>
+<h4 id="reference-from"><a href="#reference-from" class="headerlink" title="reference from"></a>reference from</h4><p><a target="_blank" rel="noopener" href="https://programmer.group/snowflake-algorithm-improved-version-snowflake.html">snowflake implementation</a><br><a target="_blank" rel="noopener" href="https://www.fatalerrors.org/a/snowflake-algorithm-and-uuid-generation-strategy.html">snowflkae explain</a><br><a target="_blank" rel="noopener" href="https://instagram-engineering.com/sharding-ids-at-instagram-1cf5a71e5a5c">Ins with PL/PGSQL</a><br><a target="_blank" rel="noopener" href="https://betterprogramming.pub/uuid-generation-snowflake-identifiers-unique-2aed8b1771bc">uuid and snowflake</a><br><a target="_blank" rel="noopener" href="https://code.flickr.net/2010/02/08/ticket-servers-distributed-unique-primary-keys-on-the-cheap/">ticket db server</a><br><a target="_blank" rel="noopener" href="https://github.com/Meituan-Dianping/Leaf">leaf</a><br><a target="_blank" rel="noopener" href="https://github.com/baidu/uid-generator">uid generator</a><br><a target="_blank" rel="noopener" href="https://github.com/sony/sonyflake/blob/master/example/sonyflake_server.go">go snowflake</a><br><a target="_blank" rel="noopener" href="https://github.com/uuidjs/uuid">js uuid</a></p>
+
     </div>
 
     
@@ -294,7 +366,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UUID"><span class="nav-number">1.</span> <span class="nav-text">UUID</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Snowflake"><span class="nav-number">2.</span> <span class="nav-text">Snowflake</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Why"><span class="nav-number">1.</span> <span class="nav-text">Why</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Prerequisite"><span class="nav-number">2.</span> <span class="nav-text">Prerequisite</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Solutions"><span class="nav-number">3.</span> <span class="nav-text">Solutions</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Inside-Web-Application-gt-UUID"><span class="nav-number">3.1.</span> <span class="nav-text">Inside Web Application &#x3D;&gt; UUID</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pros"><span class="nav-number">3.1.1.</span> <span class="nav-text">Pros:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cons"><span class="nav-number">3.1.2.</span> <span class="nav-text">Cons:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ID-Generation-Service-Snowflake"><span class="nav-number">3.2.</span> <span class="nav-text">ID Generation Service (Snowflake)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pros-1"><span class="nav-number">3.2.1.</span> <span class="nav-text">Pros:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cons-1"><span class="nav-number">3.2.2.</span> <span class="nav-text">Cons:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Persistence-Layer-Generated-IDs"><span class="nav-number">3.3.</span> <span class="nav-text">Persistence Layer Generated IDs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pros-2"><span class="nav-number">3.3.1.</span> <span class="nav-text">Pros:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cons-2"><span class="nav-number">3.3.2.</span> <span class="nav-text">Cons:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DB-Ticket-Servers"><span class="nav-number">3.4.</span> <span class="nav-text">DB Ticket Servers</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pros-3"><span class="nav-number">3.4.1.</span> <span class="nav-text">Pros:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cons-3"><span class="nav-number">3.4.2.</span> <span class="nav-text">Cons:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UUID-8byte-128bits"><span class="nav-number">4.</span> <span class="nav-text">UUID (8byte &#x3D;&#x3D; 128bits)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Snowflake"><span class="nav-number">5.</span> <span class="nav-text">Snowflake</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Code"><span class="nav-number">5.1.</span> <span class="nav-text">Code</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#reference-from"><span class="nav-number">5.1.0.1.</span> <span class="nav-text">reference from</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
