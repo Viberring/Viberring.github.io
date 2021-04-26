@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"viberring.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="the jvm architecture">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java virtual machine">
+<meta property="og:url" content="https://viberring.github.io/2021/04/22/java/JVM/index.html">
+<meta property="og:site_name" content="viber">
+<meta property="og:description" content="the jvm architecture">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://viberring.github.io/images/java/architecture.png">
+<meta property="og:image" content="https://viberring.github.io/images/java/jvmclassloader.jpg">
+<meta property="og:image" content="https://viberring.github.io/images/java/heap.png">
+<meta property="article:published_time" content="2021-04-22T06:00:50.000Z">
+<meta property="article:modified_time" content="2021-04-22T06:00:50.000Z">
+<meta property="article:author" content="viber">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://viberring.github.io/images/java/architecture.png">
+
+<link rel="canonical" href="https://viberring.github.io/2021/04/22/java/JVM/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>java virtual machine | viber</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">viber</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">the way to the future</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/04/22/java/JVM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="viber">
+      <meta itemprop="description" content="rest in peace">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="viber">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          java virtual machine
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-04-22 14:00:50" itemprop="dateCreated datePublished" datetime="2021-04-22T14:00:50+08:00">2021-04-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iv/" itemprop="url" rel="index"><span itemprop="name">iv</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">the jvm architecture</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Java-Virtual-Machine"><a href="#Java-Virtual-Machine" class="headerlink" title="Java Virtual Machine"></a>Java Virtual Machine</h1><pre><code>1. specification
+2. implementation
+3. instance
+
+jvm is part of jre.
+jvm provide runtime environment to run java code.
+</code></pre>
+<h2 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a>Architecture</h2><p><img src="/images/java/architecture.png" alt="Archtecture"></p>
+<pre><code>class loader -&gt; byte code verifier -&gt; execution engine
+</code></pre>
+<ol>
+<li><p>ClassLoader</p>
+<ul>
+<li>Bootstrap class loader</li>
+<li>Extension class loader</li>
+<li>System/Application class loader</li>
+</ul>
+<p> JVM follows the Delegation-Hierarchy principle to load classes. System class loader delegate load request to extension class loader and extension class loader delegate request to the bootstrap class loader. If a class found in the boot-strap path, the class is loaded otherwise request again transfers to the extension class loader and then to the system class loader. At last, if the system class loader fails to load class, then we get run-time exception java.lang.ClassNotFoundException. </p>
+<p> <img src="/images/java/jvmclassloader.jpg" alt="Delegation-Hierarchy"></p>
+<ul>
+<li>Check if the class has already been loaded.</li>
+<li>Typically ask the parent class loader to load the class</li>
+<li>Attempt to find the class in its own class path.</li>
+</ul>
+<blockquote>
+<p>loading class files</p>
+</blockquote>
+<ul>
+<li>Loading<br>  The Class loader reads the “.class” file, generate the corresponding binary data and save it in the method area. For each “.class” file, JVM stores the following information in the method area. </li>
+<li>Linking<br>  Performs verification, preparation, and (optionally) resolution. </li>
+<li>Initialization</li>
+</ul>
+</li>
+</ol>
+<ol start="2">
+<li><p>Method Area (java 8 MetaSpace)</p>
+<blockquote>
+<p>stores class structure </p>
+</blockquote>
+<ul>
+<li>metadata</li>
+<li>the constant runtime pool</li>
+<li>the code for method</li>
+</ul>
+</li>
+<li><p>Heap</p>
+<blockquote>
+<p>store all Objects and shared across threads</p>
+</blockquote>
+<ul>
+<li>instance</li>
+<li>arrays</li>
+</ul>
+</li>
+<li><p>Stack</p>
+<blockquote>
+<p>thread isolation</p>
+</blockquote>
+</li>
+<li><p>Pc Registers</p>
+<blockquote>
+<p>store the address of the machine instruction<br> for context switch</p>
+</blockquote>
+<ul>
+<li>currently executing instruction</li>
+<li>thread isolation</li>
+</ul>
+</li>
+<li><p>Native Method Stacks</p>
+<blockquote>
+<p>store the instruction of native code depends<br> on the native library</p>
+</blockquote>
+</li>
+<li><p>Execution Engine</p>
+</li>
+<li><p>Native Method interface</p>
+</li>
+<li><p>Native Method Libraries</p>
+</li>
+</ol>
+<h2 id="Heap"><a href="#Heap" class="headerlink" title="Heap"></a>Heap</h2><p><img src="/images/java/heap.png" alt="Heap Model"></p>
+<h3 id="Heap-Part"><a href="#Heap-Part" class="headerlink" title="Heap Part"></a>Heap Part</h3><pre><code>The JVM heap is physically divided into two parts (or generations): nursery (or young space/young generation) and old space (or old generation).
+
+The nursery is divided into three parts – Eden Memory and two Survivor Memory spaces.
+</code></pre>
+<h4 id="Important-points-about-the-nursery-space"><a href="#Important-points-about-the-nursery-space" class="headerlink" title="Important points about the nursery space:"></a>Important points about the nursery space:</h4><ul>
+<li>Most of the newly created objects are located in the Eden Memory space</li>
+<li>When Eden space is filled with objects, Minor GC is performed and all the survivor objects are moved to one of the survivor spaces<br>Minor GC also checks the survivor objects and moves them to the other survivor space. So at a time, one of the survivor space is always empty</li>
+<li>Objects that have survived many cycles of GC, are moved to the old generation memory space. Usually, it is done by setting a threshold for the age of the nursery objects before they become eligible to promote to the old generation</li>
+</ul>
+<p>When the old generation becomes full, garbage is collected there and the process is called as old collection. Old generation memory contains the objects that are long-lived and survived after many rounds of Minor GC. Usually, garbage collection is performed in Old generation memory when it’s full. Old generation garbage collection is called as Major GC and usually takes longer. The reasoning behind a nursery is that most objects are temporary and short-lived. A young collection is designed to be swift at finding newly allocated objects that are still alive and moving them away from the nursery. Typically, a young collection frees a given amount of memory much faster than an old collection or a garbage collection of a single-generational heap (a heap without a nursery).</p>
+<h3 id="PermGen"><a href="#PermGen" class="headerlink" title="PermGen"></a>PermGen</h3><pre><code>PermGen (Permanent Generation) is a special heap space separated from the main memory heap.
+
+The JVM keeps track of loaded class metadata in the PermGen. Additionally, 
+the JVM stores all the static content in this memory section. 
+This includes all the static methods, primitive variables, 
+and references to the static objects.
+
+Furthermore, it contains data about bytecode, names, and JIT information. 
+Before Java 7, the String Pool was also part of this memory. 
+The disadvantages of the fixed pool size are listed in our write-up.
+
+However, we can change the default size with the JVM options:
+
+-XX:PermSize=[size] is the initial or minimum size of the PermGen space
+-XX:MaxPermSize=[size] is the maximum size
+
+
+With its limited memory size, PermGen is involved in generating the famous OutOfMemoryError.
+Simply put, the class loaders weren&#39;t garbage collected properly and, 
+as a result, generated a memory leak.
+</code></pre>
+<h3 id="Metaspace"><a href="#Metaspace" class="headerlink" title="Metaspace"></a>Metaspace</h3><p>Simply put, Metaspace is a new memory space – starting from the Java 8 version;<br>it has replaced the older PermGen memory space. The most significant difference is how it handles memory allocation.</p>
+<p>Specifically, this native memory region grows automatically by default.</p>
+<p>We also have new flags to tune the memory:</p>
+<p>MetaspaceSize and MaxMetaspaceSize – we can set the Metaspace upper bounds.<br>MinMetaspaceFreeRatio – is the minimum percentage of class metadata capacity free after garbage collection<br>MaxMetaspaceFreeRatio – is the maximum percentage of class metadata capacity free after a garbage collection<br>to avoid a reduction in the amount of space</p>
+<p>Therefore, with this improvement, JVM reduces the chance to get the OutOfMemory error.</p>
+<h2 id="Garbage-Collection"><a href="#Garbage-Collection" class="headerlink" title="Garbage Collection"></a>Garbage Collection</h2><p>Garbage Collection is the process of freeing space in the heap for the allocation of new objects. </p>
+<h3 id="Process"><a href="#Process" class="headerlink" title="Process"></a>Process</h3><pre><code>- Marking
+- Normal Deletion
+- Deletion with compacting
+</code></pre>
+<h3 id="Terms"><a href="#Terms" class="headerlink" title="Terms"></a>Terms</h3><ol>
+<li>Unreachable objects : An object is said to be unreachable iff it doesn’t contain any reference to it.<br>Also note that objects which are part of island of isolation are also unreachable.</li>
+<li>Eligibility for garbage collection : An object is said to be eligible for GC(garbage collection) if it is unreachable</li>
+</ol>
+<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><h4 id="Serial-Garbage-Collector"><a href="#Serial-Garbage-Collector" class="headerlink" title="Serial Garbage Collector"></a>Serial Garbage Collector</h4><p>works with a single thread.<br>this GC implementation freezes all application threads when it runs</p>
+<blockquote>
+<p>java -XX:+UseSerialGC -jar Application.java</p>
+</blockquote>
+<h4 id="Parallel-Garbage-Collector"><a href="#Parallel-Garbage-Collector" class="headerlink" title="Parallel Garbage Collector"></a>Parallel Garbage Collector</h4><p>this uses multiple threads for managing heap space.<br>but it also freezes other application threads while gc.</p>
+<pre><code>-XX:ParallelGCThreads=&lt;N&gt;
+-XX:MaxGCPauseMillis=&lt;N&gt;
+-XX:GCTimeRatio=&lt;N&gt;
+-Xmx&lt;N&gt;
+</code></pre>
+<blockquote>
+<p>java -XX:+UseParallelGC -jar Application.java</p>
+</blockquote>
+<h4 id="CMS-Garbage-Collector"><a href="#CMS-Garbage-Collector" class="headerlink" title="CMS Garbage Collector"></a>CMS Garbage Collector</h4><p>The Concurrent Mark Sweep (CMS) implementation uses multiple garbage collector threads for garbage collection. </p>
+<blockquote>
+<p>java -XX:+UseParNewGC -jar Application.java<br>    As of Java 9, the CMS garbage collector has been deprecated.</p>
+</blockquote>
+<h4 id="G1-Garbage-Collector"><a href="#G1-Garbage-Collector" class="headerlink" title="G1 Garbage Collector"></a>G1 Garbage Collector</h4><p>G1 (Garbage First) Garbage Collector is designed for applications running on multi-processor machines with large memory space.</p>
+<p>G1 collector partitions the heap into a set of equal-sized heap regions, each a contiguous range of virtual memory. When performing garbage collections, G1 shows a concurrent global marking phase (i.e. phase 1 known as Marking) to determine the liveness of objects throughout the heap.</p>
+<blockquote>
+<p>java -XX:+UseG1GC -jar Application.java</p>
+</blockquote>
+<h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><p><a target="_blank" rel="noopener" href="https://www.guru99.com/java-virtual-machine-jvm.html">jvm architecture</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.betsol.com/blog/java-memory-management-for-java-virtual-machine-jvm/">jvm</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/garbage-collection-java/">Gc</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/22/java/Gc/" rel="prev" title="garbage collection">
+      <i class="fa fa-chevron-left"></i> garbage collection
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/04/22/database/Postgre-and-Mysql/" rel="next" title="PostgreSQL">
+      PostgreSQL <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java-Virtual-Machine"><span class="nav-number">1.</span> <span class="nav-text">Java Virtual Machine</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Architecture"><span class="nav-number">1.1.</span> <span class="nav-text">Architecture</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Heap"><span class="nav-number">1.2.</span> <span class="nav-text">Heap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Heap-Part"><span class="nav-number">1.2.1.</span> <span class="nav-text">Heap Part</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Important-points-about-the-nursery-space"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">Important points about the nursery space:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PermGen"><span class="nav-number">1.2.2.</span> <span class="nav-text">PermGen</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Metaspace"><span class="nav-number">1.2.3.</span> <span class="nav-text">Metaspace</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Garbage-Collection"><span class="nav-number">1.3.</span> <span class="nav-text">Garbage Collection</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Process"><span class="nav-number">1.3.1.</span> <span class="nav-text">Process</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Terms"><span class="nav-number">1.3.2.</span> <span class="nav-text">Terms</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Implementation"><span class="nav-number">1.3.3.</span> <span class="nav-text">Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Serial-Garbage-Collector"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">Serial Garbage Collector</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Parallel-Garbage-Collector"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">Parallel Garbage Collector</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CMS-Garbage-Collector"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">CMS Garbage Collector</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#G1-Garbage-Collector"><span class="nav-number">1.3.3.4.</span> <span class="nav-text">G1 Garbage Collector</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ref"><span class="nav-number">1.3.4.</span> <span class="nav-text">Ref</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">viber</p>
+  <div class="site-description" itemprop="description">rest in peace</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">viber</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
