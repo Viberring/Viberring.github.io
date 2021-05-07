@@ -1,0 +1,55 @@
+
+import java.util.*;
+
+
+
+
+
+public class ThreeSum {
+
+
+    public static void main(String[] args) {
+        int[] intput = new intp[]{-1,0,1,2,-1,-4};
+        System.out.println(threeSum());
+    }
+
+    public static List<List<Integer>> threeSum(int[] nums) {
+        int N = nums.length;
+        
+        List<List<Integer>> result = new ArrayList<>();
+        if(N < 3) return result;
+        
+        Arrays.sort(nums);
+        System.out.println(nums);
+        
+        for (int i=0; i < N - 1; i++) {
+            int a = nums[i];
+        
+            
+            int j = i + 1;            
+            if (j == N - 1) break;
+            while (j < N - 1 && a == nums[j]) j++;
+            
+            int t = j;
+            
+            int k = N - 1;
+
+            while(j < k && (nums[j] + nums[k] + a) > 0) k--;
+            while(j < k && (nums[j] + nums[k] + a) < 0) j++;
+            
+            System.out.println("a: " + a);
+            System.out.println("j: " + j + " nums[j]: " + nums[j]);
+            System.out.println("k: " + k + " nums[k]: " + nums[k]);
+            
+            if (j != k && nums[j] + nums[k] + a == 0) {
+                List<Integer> o = new ArrayList<>();
+                o.add(nums[i]);o.add(nums[j]);o.add(nums[k]);
+                result.add(o);
+            }
+            i = t + 1;
+        }
+        return result;
+        
+    }
+    
+}
