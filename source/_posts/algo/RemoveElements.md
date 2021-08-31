@@ -78,3 +78,23 @@ class Solution {
     }
 }
 ```
+
+# 2
+```java
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int N = nums.length;
+        if (N == 0) return 0;
+        int i=0;
+        for (int j = 0; j < N; j++) {
+            if(nums[j] != val) {
+                nums[i] = nums[j];
+                i++;
+            }
+        }
+        return i;
+    }
+}
+```
+
+Sometime we should think in reverse to solve problem

@@ -84,4 +84,4 @@ the method `foo_around`
 
 ## At the end
 
-- How pass-by-referece works like in c/c++ ? (todo)
+- How pass-by-referece works like in c/c++ ? (done)
