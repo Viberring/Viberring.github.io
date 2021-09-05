@@ -8,6 +8,16 @@ categories:
 - Java
 ---
 
+# Pointer && Reference
+
+## Reference
+reference is much alias and once you create a reference like `int& a`
+then you can not change `a` eternally.
+
+## Pointer
+pointer store a memory address and pointer can be `void *`
+while reference can not.
+
 # Pass By Pointer
 ```cpp
 #include <iostrem>
