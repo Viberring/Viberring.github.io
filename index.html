@@ -163,6 +163,343 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/09/23/go/happends-before/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="viber">
+      <meta itemprop="description" content="rest in peace">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="viber">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/23/go/happends-before/" class="post-title-link" itemprop="url">Untitled</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-23 14:47:52" itemprop="dateCreated datePublished" datetime="2021-09-23T14:47:52+08:00">2021-09-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Happends-Before"><a href="#Happends-Before" class="headerlink" title="Happends Before"></a>Happends Before</h1><h2 id="What"><a href="#What" class="headerlink" title="What"></a>What</h2><p>what is <code>happends-before</code>.<br>so in my words, i think it is all about the order.<br>when a variable is read/write concurrently, the compiler<br>will not gurantee the correct result.<br>cuz the compiler will optimize the initialize of variable.</p>
+<p>in c code <code>int a(b(), c())</code> , the <code>b()</code> and <code>c()</code> will not<br>execute from left to right.<br>so to the variable <code>int a = 1; int b = 2</code>, when you read the<br><code>a</code> and <code>b</code>, there are chances b has initialized but a does not.<br>I think it some kind of the same.</p>
+<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a>Why</h2><p>cuz we need the correct result, we must know the <code>happends-before</code><br><code>serialize access</code> with <code>lock</code> and <code>channel(in go)</code>.</p>
+<h2 id="How-to-in-Go"><a href="#How-to-in-Go" class="headerlink" title="How to in Go"></a>How to in Go</h2><h3 id="Happends-Before-1"><a href="#Happends-Before-1" class="headerlink" title="Happends Before"></a>Happends Before</h3><p>Within a single goroutine, the happens-before order<br>is the order expressed by the program.<br>A read r of a variable v is allowed to observe a<br>write w to v if both of the following hold:<br>    1. r does not happen before w.<br>    2. There is no other write w’ to v that happens after w but before r.</p>
+<p>To guarantee that a read r of a variable v observes a<br>particular write w to v, ensure that w is<br>the only write r is allowed to observe. That is,<br>r is guaranteed to observe w if both of the following hold:<br>    1. w happens before r.<br>    2. Any other write to the shared variable v either happens before w or after r.</p>
+<h3 id="Synchronization"><a href="#Synchronization" class="headerlink" title="Synchronization"></a>Synchronization</h3><h4 id="Initialization"><a href="#Initialization" class="headerlink" title="Initialization"></a>Initialization</h4><ol>
+<li>If a package p imports package q, the completion<br>of q’s init functions happens before the start of any of p’s.<h4 id="Goroutine-creation"><a href="#Goroutine-creation" class="headerlink" title="Goroutine creation"></a>Goroutine creation</h4></li>
+<li>The go statement that starts a new goroutine<br>happens before the goroutine’s execution begins.<h4 id="Goroutine-destruction"><a href="#Goroutine-destruction" class="headerlink" title="Goroutine destruction"></a>Goroutine destruction</h4></li>
+<li>The exit of a goroutine is not guaranteed to happen before any event in the program.<h4 id="Channel-communication"><a href="#Channel-communication" class="headerlink" title="Channel communication"></a>Channel communication</h4></li>
+<li>A send on a (buffered) channel happens before the corresponding<br>receive from that channel completes.</li>
+<li>The closing of a channel happens before a receive<br>that returns a zero value because the channel is closed.</li>
+<li>A receive from an unbuffered channel happens<br>before the send on that channel completes.</li>
+<li>The kth receive on a channel with capacity C happens<br>before the k+Cth send from that channel completes.<h4 id="Lock"><a href="#Lock" class="headerlink" title="Lock"></a>Lock</h4></li>
+<li>For any sync.Mutex or sync.RWMutex variable l and n &lt; m,<br>call n of l.Unlock() happens before call m of l.Lock() returns.</li>
+<li>For any call to l.RLock on a sync.RWMutex variable l,<br>there is an n such that the l.RLock happens (returns)<br>after call n to l.Unlock and the matching<br>l.RUnlock happens before call n+1 to l.Lock.<h4 id="Once"><a href="#Once" class="headerlink" title="Once"></a>Once</h4></li>
+<li>A single call of f() from once.Do(f) happens (returns)<br>before any call of once.Do(f) returns.</li>
+</ol>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a target="_blank" rel="noopener" href="https://golang.org/ref/mem">go doc</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/09/23/js/basics/promise/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="viber">
+      <meta itemprop="description" content="rest in peace">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="viber">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/23/js/basics/promise/" class="post-title-link" itemprop="url">Untitled</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-23 13:47:34" itemprop="dateCreated datePublished" datetime="2021-09-23T13:47:34+08:00">2021-09-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h1><p>in js, we know we always use <code>callback</code> to do async things.<br>and now we have <code>promise</code> and <code>async/await</code>.</p>
+<h2 id="Macro-vs-Micro"><a href="#Macro-vs-Micro" class="headerlink" title="Macro vs Micro"></a>Macro vs Micro</h2><h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a>Why</h2><h2 id="How"><a href="#How" class="headerlink" title="How"></a>How</h2><ol>
+<li><code>promise</code> promise you two result <code>resolve</code> and <code>reject</code>.</li>
+<li><code>promise</code> have three state <code>pending &amp;&amp; fullfiled &amp;&amp; reject</code></li>
+<li><code>promise</code> have a default value <code>undefined</code> and the <code>value</code><br>updated by <code>resolve(x) || reject(err)</code></li>
+<li>state change is the final step in code blocks which means<br>when <code>resolve</code> or <code>reject</code> are called the left code will no<br>be executed.</li>
+<li>the <code>state</code> and <code>result</code> are accessed by <code>.then .catch .finally</code></li>
+</ol>
+<h2 id="Promise-amp-amp-Async-Await"><a href="#Promise-amp-amp-Async-Await" class="headerlink" title="Promise &amp;&amp; Async/Await"></a>Promise &amp;&amp; Async/Await</h2><p>i think <code>async/await is syntactic sugar on top of promises</code><br>cuz when you create a <code>async fn</code> you got a <code>promise</code> in<br>the console, just like <code>promise</code>.</p>
+<h3 id="Why-Async-Await"><a href="#Why-Async-Await" class="headerlink" title="Why Async/Await"></a>Why Async/Await</h3><p>i think you can no longer use <code>then chain</code> anymore, instead<br>you can use <code>async &amp;&amp; await</code> like normal code.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/09/23/go/setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="viber">
+      <meta itemprop="description" content="rest in peace">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="viber">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/23/go/setup/" class="post-title-link" itemprop="url">Untitled</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-23 09:36:59" itemprop="dateCreated datePublished" datetime="2021-09-23T09:36:59+08:00">2021-09-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="GOROOT-amp-amp-GOPATH-amp-amp-GOMODULE"><a href="#GOROOT-amp-amp-GOPATH-amp-amp-GOMODULE" class="headerlink" title="GOROOT &amp;&amp; GOPATH &amp;&amp; GOMODULE"></a>GOROOT &amp;&amp; GOPATH &amp;&amp; GOMODULE</h1><h2 id="GOROOT"><a href="#GOROOT" class="headerlink" title="GOROOT"></a>GOROOT</h2><p>I think it is the source code directory.<br>where compiler and standard libraries exist.<br>it is always the installation directory.</p>
+<h2 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h2><p><code>Workspace directory</code> where go code belongs.<br>if no GOPATH set, it will default to a subdirectory<br>named <code>go</code> in the user’s home direcory -&gt; <code>~/go</code></p>
+<h2 id="GOMODULE"><a href="#GOMODULE" class="headerlink" title="GOMODULE"></a>GOMODULE</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/09/17/python/coroutine/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="viber">
+      <meta itemprop="description" content="rest in peace">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="viber">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/17/python/coroutine/" class="post-title-link" itemprop="url">Untitled</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-17 11:21:49" itemprop="dateCreated datePublished" datetime="2021-09-17T11:21:49+08:00">2021-09-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Coroutine"><a href="#Coroutine" class="headerlink" title="Coroutine"></a>Coroutine</h1><h2 id="What-is-coroutine"><a href="#What-is-coroutine" class="headerlink" title="What is coroutine"></a>What is coroutine</h2><p>In general coroutine is a function, but is differenct with<br>the normal funtion which is execute top-down.<br>while coroutine can be <code>suspend</code> and <code>resume</code>.<br>In other words, coroutine can be controled by code.</p>
+<h2 id="How-coroutine-works"><a href="#How-coroutine-works" class="headerlink" title="How coroutine works"></a>How coroutine works</h2><p>coroutine can be implemented with difference methods.<br>but the main work is to maintain the infomation of the<br>coroutine. so we can create a new stack to track the state<br>of the coroutine.</p>
+<h2 id="coroutine-vs-thread"><a href="#coroutine-vs-thread" class="headerlink" title="coroutine vs. thread"></a>coroutine vs. thread</h2><ol>
+<li>thread is scheduled by os, which can not control the time.<br>while corotine can be controled by us, which makes the<br>program more predictable.</li>
+<li>thread switch is all about context-switch which have a lot<br>works to do, while coroutine do not need that. cuz, we know<br>exactly which coroutine to resume the execution.</li>
+<li>lock-free? cuz thread’s behavior is determined by os<br>scheduler.</li>
+<li>thread need its own memeory and stuffs while coroutine’s<br>memory manage is simpler (? or just in the call-stack ?)</li>
+</ol>
+<h2 id="coroutine-in-Python"><a href="#coroutine-in-Python" class="headerlink" title="coroutine in Python"></a>coroutine in Python</h2><h3 id="Iterators"><a href="#Iterators" class="headerlink" title="Iterators"></a>Iterators</h3><p>iterator is kinda of design pattern, you don’t know what<br>the object is, but you just iterate it, cuz it is iterable.</p>
+<h3 id="Generators"><a href="#Generators" class="headerlink" title="Generators"></a>Generators</h3><p>generator can be used just like iterator with different<br>implementation and desgin purpose.<br>generator is more like time, you can only run forward but<br>it have limits.</p>
+<h3 id="Coroutines"><a href="#Coroutines" class="headerlink" title="Coroutines"></a>Coroutines</h3><p>coroutine can suspend and resume the execution.<br>like generator, but coroutine can receive and send value</p>
+<h2 id="Practice"><a href="#Practice" class="headerlink" title="Practice"></a>Practice</h2><h3 id="yield"><a href="#yield" class="headerlink" title="yield"></a>yield</h3><h3 id="yield-from"><a href="#yield-from" class="headerlink" title="yield from"></a>yield from</h3><h3 id="async-await"><a href="#async-await" class="headerlink" title="async/await"></a>async/await</h3><h2 id="Go-amp-amp-C"><a href="#Go-amp-amp-C" class="headerlink" title="Go &amp;&amp; C++"></a>Go &amp;&amp; C++</h2><h3 id="Goroutine"><a href="#Goroutine" class="headerlink" title="Goroutine"></a>Goroutine</h3><h3 id="C"><a href="#C" class="headerlink" title="C++"></a>C++</h3><h3 id=""><a href="#" class="headerlink" title=""></a></h3><ol>
+<li>I want to know how <code>yield</code> works and how <code>coroutine</code> replace <code>callback</code>.</li>
+<li>I want to know how <code>event loop</code> based framework deal with <code>child coroutine</code><br>with multiple level</li>
+</ol>
+<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a target="_blank" rel="noopener" href="http://www.vishalchovatiya.com/coroutine-in-c-language/">c implement</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/09/17/iv/private/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="viber">
+      <meta itemprop="description" content="rest in peace">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="viber">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/17/iv/private/" class="post-title-link" itemprop="url">Untitled</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-17 10:58:31" itemprop="dateCreated datePublished" datetime="2021-09-17T10:58:31+08:00">2021-09-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Private"><a href="#Private" class="headerlink" title="Private"></a>Private</h1><p>so what is private ?<br>well, private is private.<br>ok, but is private private ?</p>
+<h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><p>private in java is a access-restrict for<br>encapsulation.<br>but private is not absolutely private in java.</p>
+<p>Here is one example.<br><code>private</code> is not private, it can be accessed.<br>so private field is not inherited.<br>but we can still get the private field by<br>public access method.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> a;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">A</span><span class="params">(<span class="keyword">int</span> a)</span> </span>&#123; <span class="keyword">this</span>.a = a; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getA</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> a; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">B</span><span class="params">(<span class="keyword">int</span> b)</span> </span>&#123; <span class="keyword">super</span>(b); &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getB</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> getA(); &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = <span class="keyword">new</span> B(<span class="number">10</span>).getA(); <span class="comment">// 10</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>with reflection, anything is just open to<br>the world.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> i = <span class="number">5</span>；</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> <span class="keyword">extends</span> <span class="title">A</span> </span>&#123;&#125;</span><br><span class="line">B b = <span class="keyword">new</span> B();</span><br><span class="line">Field f = A.class.getDeclaredField(<span class="string">&quot;i&quot;</span>);</span><br><span class="line">f.setAccessible(<span class="keyword">true</span>);</span><br><span class="line"><span class="keyword">int</span> i = (<span class="keyword">int</span>) f.get(b); <span class="comment">// 5</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/09/15/js/basics/mv*/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -481,380 +818,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/08/31/iv/biginteger/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="viber">
-      <meta itemprop="description" content="rest in peace">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="viber">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/31/iv/biginteger/" class="post-title-link" itemprop="url">biginteger</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-08-31 23:21:47" itemprop="dateCreated datePublished" datetime="2021-08-31T23:21:47+08:00">2021-08-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/iv/" itemprop="url" rel="index"><span itemprop="name">iv</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>biginteger</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/31/iv/biginteger/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/08/31/iv/compile_or_interpreted/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="viber">
-      <meta itemprop="description" content="rest in peace">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="viber">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/31/iv/compile_or_interpreted/" class="post-title-link" itemprop="url">java compile or interpretede</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-08-31 22:21:43" itemprop="dateCreated datePublished" datetime="2021-08-31T22:21:43+08:00">2021-08-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/iv/" itemprop="url" rel="index"><span itemprop="name">iv</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>java compile or interpretede</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/31/iv/compile_or_interpreted/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/08/31/diary/something/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="viber">
-      <meta itemprop="description" content="rest in peace">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="viber">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/31/diary/something/" class="post-title-link" itemprop="url">something</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-08-31 00:00:00" itemprop="dateCreated datePublished" datetime="2021-08-31T00:00:00+08:00">2021-08-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/diary/" itemprop="url" rel="index"><span itemprop="name">diary</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>something</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/31/diary/something/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/08/30/java/pointer_vs_reference/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="viber">
-      <meta itemprop="description" content="rest in peace">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="viber">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/30/java/pointer_vs_reference/" class="post-title-link" itemprop="url">pointer_vs_reference</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-08-30 23:08:41" itemprop="dateCreated datePublished" datetime="2021-08-30T23:08:41+08:00">2021-08-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>pointer_vs_reference</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/30/java/pointer_vs_reference/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/08/06/js/YDKJSY/ch02/Surveying%20JS/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="viber">
-      <meta itemprop="description" content="rest in peace">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="viber">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/06/js/YDKJSY/ch02/Surveying%20JS/" class="post-title-link" itemprop="url">Surveying JS</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-08-06 11:34:05" itemprop="dateCreated datePublished" datetime="2021-08-06T11:34:05+08:00">2021-08-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/js/" itemprop="url" rel="index"><span itemprop="name">js</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Surveying JS</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/06/js/YDKJSY/ch02/Surveying%20JS/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -920,7 +887,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-count">53</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
