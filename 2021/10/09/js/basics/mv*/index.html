@@ -20,19 +20,20 @@
     var CONFIG = {"hostname":"viberring.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Happends BeforeWhatwhat is happends-before.so in my words, i think it is all about the order.when a variable is read&#x2F;write concurrently, the compilerwill not gurantee the correct result.cuz the compil">
+  <meta name="description" content="About MV* Pattern in Js">
 <meta property="og:type" content="article">
-<meta property="og:title" content="viber">
-<meta property="og:url" content="https://viberring.github.io/2021/09/23/go/happends-before/index.html">
+<meta property="og:title" content="MV* Pattern">
+<meta property="og:url" content="https://viberring.github.io/2021/10/09/js/basics/mv*/index.html">
 <meta property="og:site_name" content="viber">
-<meta property="og:description" content="Happends BeforeWhatwhat is happends-before.so in my words, i think it is all about the order.when a variable is read&#x2F;write concurrently, the compilerwill not gurantee the correct result.cuz the compil">
+<meta property="og:description" content="About MV* Pattern in Js">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-09-23T06:47:52.069Z">
-<meta property="article:modified_time" content="2021-09-23T06:47:52.069Z">
+<meta property="article:published_time" content="2021-10-09T01:54:09.000Z">
+<meta property="article:modified_time" content="2021-10-09T01:54:09.000Z">
 <meta property="article:author" content="viber">
+<meta property="article:tag" content="js">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://viberring.github.io/2021/09/23/go/happends-before/">
+<link rel="canonical" href="https://viberring.github.io/2021/10/09/js/basics/mv*/">
 
 
 <script id="page-configurations">
@@ -45,7 +46,7 @@
   };
 </script>
 
-  <title> | viber</title>
+  <title>MV* Pattern | viber</title>
   
 
 
@@ -166,7 +167,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/09/23/go/happends-before/">
+    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2021/10/09/js/basics/mv*/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -179,7 +180,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          MV* Pattern
         </h1>
 
         <div class="post-meta">
@@ -189,10 +190,20 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-09-23 14:47:52" itemprop="dateCreated datePublished" datetime="2021-09-23T14:47:52+08:00">2021-09-23</time>
+              <time title="Created: 2021-10-09 09:54:09" itemprop="dateCreated datePublished" datetime="2021-10-09T09:54:09+08:00">2021-10-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/js/" itemprop="url" rel="index"><span itemprop="name">js</span></a>
+                </span>
             </span>
 
           
+            <div class="post-description">About MV* Pattern in Js</div>
 
         </div>
       </header>
@@ -203,24 +214,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="Happends-Before"><a href="#Happends-Before" class="headerlink" title="Happends Before"></a>Happends Before</h1><h2 id="What"><a href="#What" class="headerlink" title="What"></a>What</h2><p>what is <code>happends-before</code>.<br>so in my words, i think it is all about the order.<br>when a variable is read/write concurrently, the compiler<br>will not gurantee the correct result.<br>cuz the compiler will optimize the initialize of variable.</p>
-<p>in c code <code>int a(b(), c())</code> , the <code>b()</code> and <code>c()</code> will not<br>execute from left to right.<br>so to the variable <code>int a = 1; int b = 2</code>, when you read the<br><code>a</code> and <code>b</code>, there are chances b has initialized but a does not.<br>I think it some kind of the same.</p>
-<h2 id="Why"><a href="#Why" class="headerlink" title="Why"></a>Why</h2><p>cuz we need the correct result, we must know the <code>happends-before</code><br><code>serialize access</code> with <code>lock</code> and <code>channel(in go)</code>.</p>
-<h2 id="How-to-in-Go"><a href="#How-to-in-Go" class="headerlink" title="How to in Go"></a>How to in Go</h2><h3 id="Happends-Before-1"><a href="#Happends-Before-1" class="headerlink" title="Happends Before"></a>Happends Before</h3><p>Within a single goroutine, the happens-before order<br>is the order expressed by the program.<br>A read r of a variable v is allowed to observe a<br>write w to v if both of the following hold:<br>    1. r does not happen before w.<br>    2. There is no other write w’ to v that happens after w but before r.</p>
-<p>To guarantee that a read r of a variable v observes a<br>particular write w to v, ensure that w is<br>the only write r is allowed to observe. That is,<br>r is guaranteed to observe w if both of the following hold:<br>    1. w happens before r.<br>    2. Any other write to the shared variable v either happens before w or after r.</p>
-<h3 id="Synchronization"><a href="#Synchronization" class="headerlink" title="Synchronization"></a>Synchronization</h3><h4 id="Initialization"><a href="#Initialization" class="headerlink" title="Initialization"></a>Initialization</h4><ol>
-<li>If a package p imports package q, the completion<br>of q’s init functions happens before the start of any of p’s.<h4 id="Goroutine-creation"><a href="#Goroutine-creation" class="headerlink" title="Goroutine creation"></a>Goroutine creation</h4></li>
-<li>The go statement that starts a new goroutine<br>happens before the goroutine’s execution begins.<h4 id="Goroutine-destruction"><a href="#Goroutine-destruction" class="headerlink" title="Goroutine destruction"></a>Goroutine destruction</h4></li>
-<li>The exit of a goroutine is not guaranteed to happen before any event in the program.<h4 id="Channel-communication"><a href="#Channel-communication" class="headerlink" title="Channel communication"></a>Channel communication</h4></li>
-<li>A send on a (buffered) channel happens before the corresponding<br>receive from that channel completes.</li>
-<li>The closing of a channel happens before a receive<br>that returns a zero value because the channel is closed.</li>
-<li>A receive from an unbuffered channel happens<br>before the send on that channel completes.</li>
-<li>The kth receive on a channel with capacity C happens<br>before the k+Cth send from that channel completes.<h4 id="Lock"><a href="#Lock" class="headerlink" title="Lock"></a>Lock</h4></li>
-<li>For any sync.Mutex or sync.RWMutex variable l and n &lt; m,<br>call n of l.Unlock() happens before call m of l.Lock() returns.</li>
-<li>For any call to l.RLock on a sync.RWMutex variable l,<br>there is an n such that the l.RLock happens (returns)<br>after call n to l.Unlock and the matching<br>l.RUnlock happens before call n+1 to l.Lock.<h4 id="Once"><a href="#Once" class="headerlink" title="Once"></a>Once</h4></li>
-<li>A single call of f() from once.Do(f) happens (returns)<br>before any call of once.Do(f) returns.</li>
-</ol>
-<h2 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h2><p><a target="_blank" rel="noopener" href="https://golang.org/ref/mem">go doc</a></p>
+        <h1 id="MV"><a href="#MV" class="headerlink" title="MV*"></a>MV*</h1><p>We are talking about <code>mvc</code> <code>mvvm</code> <code>mvp</code> design pattern</p>
+<h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><p>Model — View — Controller</p>
+<h2 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h2><h2 id="MVP"><a href="#MVP" class="headerlink" title="MVP"></a>MVP</h2><h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><p><a target="_blank" rel="noopener" href="https://medium.com/developers-tomorrow/javascript-interview-question-is-react-an-mvc-or-mvvm-ac2ea2a5127d">XX</a></p>
 
     </div>
 
@@ -229,6 +225,9 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/js/" rel="tag"># js</a>
+          </div>
 
         
 
@@ -236,12 +235,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/09/29/iv/async_vs_multi-thread/" rel="prev" title="Asyncprogramming">
-      <i class="fa fa-chevron-left"></i> Asyncprogramming
+    <a href="/2021/10/09/js/basics/hoisting/" rel="prev" title="js variable declaration">
+      <i class="fa fa-chevron-left"></i> js variable declaration
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/09/23/js/basics/promise/" rel="next" title="">
-       <i class="fa fa-chevron-right"></i>
+    <a href="/2021/10/09/js/basics/promise/" rel="next" title="Promise">
+      Promise <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -301,7 +300,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Happends-Before"><span class="nav-number">1.</span> <span class="nav-text">Happends Before</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#What"><span class="nav-number">1.1.</span> <span class="nav-text">What</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why"><span class="nav-number">1.2.</span> <span class="nav-text">Why</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-in-Go"><span class="nav-number">1.3.</span> <span class="nav-text">How to in Go</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Happends-Before-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">Happends Before</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Synchronization"><span class="nav-number">1.3.2.</span> <span class="nav-text">Synchronization</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Initialization"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">Initialization</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Goroutine-creation"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">Goroutine creation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Goroutine-destruction"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">Goroutine destruction</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Channel-communication"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">Channel communication</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Lock"><span class="nav-number">1.3.2.5.</span> <span class="nav-text">Lock</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Once"><span class="nav-number">1.3.2.6.</span> <span class="nav-text">Once</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ref"><span class="nav-number">1.4.</span> <span class="nav-text">Ref</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MV"><span class="nav-number">1.</span> <span class="nav-text">MV*</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MVC"><span class="nav-number">1.1.</span> <span class="nav-text">MVC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVVM"><span class="nav-number">1.2.</span> <span class="nav-text">MVVM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVP"><span class="nav-number">1.3.</span> <span class="nav-text">MVP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Ref"><span class="nav-number">1.3.1.</span> <span class="nav-text">Ref</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -315,20 +314,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-count">59</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
