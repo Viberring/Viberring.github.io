@@ -1,3 +1,12 @@
+---
+title: MV* Pattern
+description: About MV* Pattern in Js
+date: 2021-10-09 09:54:09
+tags:
+- js
+categories:
+- js
+---
 # MV* 
 We are talking about `mvc` `mvvm` `mvp` design pattern
 

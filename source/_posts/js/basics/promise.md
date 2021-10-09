@@ -1,3 +1,12 @@
+---
+title: Promise
+description: Promise Usage
+date: 2021-10-09 09:54:09
+tags:
+- js
+categories:
+- js
+---
 # Promise
 in js, we know we always use `callback` to do async things.
 and now we have `promise` and `async/await`.

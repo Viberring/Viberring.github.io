@@ -1,3 +1,12 @@
+---
+title: About Private Field
+description: about private field 
+date: 2021-10-09 09:54:09
+tags:
+- java
+categories:
+- iv
+---
 # Private
 
 so what is private ?

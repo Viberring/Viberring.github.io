@@ -1,3 +1,12 @@
+---
+title: Happends Before
+description: happends before in go
+date: 2021-10-09 09:54:09
+tags:
+- go
+categories:
+- go
+---
 # Happends Before
 
 ## What

@@ -1,3 +1,12 @@
+---
+title: js variable declaration
+description: werid js scope
+date: 2021-10-09 09:54:09
+tags:
+- js
+categories:
+- js
+---
 # Variable Hoisting
 the `variable hoisting` is some kind of anti-programming.
 but when you work with `js`, you must know how it works.

@@ -1,3 +1,12 @@
+---
+title: Go Env
+description: set up go env
+date: 2021-10-09 09:54:09
+tags:
+- go
+categories:
+- go
+---
 # GOROOT && GOPATH && GOMODULE
 
 ## GOROOT
