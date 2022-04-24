@@ -1,3 +1,13 @@
+---
+title: Moduler
+description: a case of moduler operation
+date: 2021-10-09 09:54:09
+tags:
+- c
+categories:
+- c
+---
+
 # Moduler Operation
 
 ## %
