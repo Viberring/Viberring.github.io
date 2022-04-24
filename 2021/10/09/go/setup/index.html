@@ -214,9 +214,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="GOROOT-amp-amp-GOPATH-amp-amp-GOMODULE"><a href="#GOROOT-amp-amp-GOPATH-amp-amp-GOMODULE" class="headerlink" title="GOROOT &amp;&amp; GOPATH &amp;&amp; GOMODULE"></a>GOROOT &amp;&amp; GOPATH &amp;&amp; GOMODULE</h1><h2 id="GOROOT"><a href="#GOROOT" class="headerlink" title="GOROOT"></a>GOROOT</h2><p>I think it is the source code directory.<br>where compiler and standard libraries exist.<br>it is always the installation directory.</p>
-<h2 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h2><p><code>Workspace directory</code> where go code belongs.<br>if no GOPATH set, it will default to a subdirectory<br>named <code>go</code> in the user’s home direcory -&gt; <code>~/go</code></p>
-<h2 id="GOMODULE"><a href="#GOMODULE" class="headerlink" title="GOMODULE"></a>GOMODULE</h2>
+        <h1 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h1><p><a target="_blank" rel="noopener" href="https://golang.google.cn/dl/">official website</a></p>
+<ol>
+<li>download mac-darwin-***.tar.gz</li>
+<li>unpack the <code>compress dir</code> to the directory whereever you create<br>like <code>$HOME/xxx/xxx</code></li>
+<li>add <code>ENV Config</code> in <code>.bash_proifle</code> or <code>.zshrc</code> <ul>
+<li>set the <code>GOROOT</code> to the dir you unpack<br>  <code>export GOROOT=$HOME/xxx/xxx</code></li>
+<li>set go terminal command<br>  <code>export PATH=$&#123;PATH&#125;:$&#123;GOROOT&#125;/bin</code></li>
+<li>set <code>GOPATH</code> where you develop<br>  <code>export GOPATH=/Users/viber/go</code></li>
+<li>set <code>proxy</code><br>  <code>export GO111MODULE=on</code><br>  <code>export GOPROXY=https://goproxy.cn</code></li>
+</ul>
+</li>
+</ol>
+<h1 id="GOROOT-amp-amp-GOPATH-amp-amp-GOMODULE"><a href="#GOROOT-amp-amp-GOPATH-amp-amp-GOMODULE" class="headerlink" title="GOROOT &amp;&amp; GOPATH &amp;&amp; GOMODULE"></a>GOROOT &amp;&amp; GOPATH &amp;&amp; GOMODULE</h1><h2 id="GOROOT"><a href="#GOROOT" class="headerlink" title="GOROOT"></a>GOROOT</h2><p>I think it is the source code directory.<br>where compiler and standard libraries exist.<br>it is always the installation directory.</p>
+<h2 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h2><p><code>Workspace directory</code> where go code belongs.<br>if no GOPATH set, it will default to a subdirectory<br>named <code>go</code> in the user’s home direcory -&gt; <code>~/go</code>  </p>
+<h2 id="GOMODULE"><a href="#GOMODULE" class="headerlink" title="GOMODULE"></a>GOMODULE</h2><p><code>Module</code> is a collection <code>package</code><br><code>go mod init foo/bar</code></p>
+
     </div>
 
     
@@ -234,12 +247,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/10/09/go/happends-before/" rel="prev" title="Happends Before">
-      <i class="fa fa-chevron-left"></i> Happends Before
+    <a href="/2021/10/09/c/mod/" rel="prev" title="Moduler">
+      <i class="fa fa-chevron-left"></i> Moduler
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/10/09/iv/Thread/" rel="next" title="About Thread">
-      About Thread <i class="fa fa-chevron-right"></i>
+    <a href="/2021/10/09/go/happends-before/" rel="next" title="Happends Before">
+      Happends Before <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -299,7 +312,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GOROOT-amp-amp-GOPATH-amp-amp-GOMODULE"><span class="nav-number">1.</span> <span class="nav-text">GOROOT &amp;&amp; GOPATH &amp;&amp; GOMODULE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GOROOT"><span class="nav-number">1.1.</span> <span class="nav-text">GOROOT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GOPATH"><span class="nav-number">1.2.</span> <span class="nav-text">GOPATH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GOMODULE"><span class="nav-number">1.3.</span> <span class="nav-text">GOMODULE</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Installation"><span class="nav-number">1.</span> <span class="nav-text">Installation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GOROOT-amp-amp-GOPATH-amp-amp-GOMODULE"><span class="nav-number">2.</span> <span class="nav-text">GOROOT &amp;&amp; GOPATH &amp;&amp; GOMODULE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GOROOT"><span class="nav-number">2.1.</span> <span class="nav-text">GOROOT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GOPATH"><span class="nav-number">2.2.</span> <span class="nav-text">GOPATH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GOMODULE"><span class="nav-number">2.3.</span> <span class="nav-text">GOMODULE</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -313,20 +326,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-count">65</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -353,7 +366,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
