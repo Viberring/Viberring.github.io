@@ -219,6 +219,15 @@ introspection is a method to use code to inspect other
 code in the same system.
 manipulation is make modification at runtime.
 </code></pre>
+<h2 id="Basic"><a href="#Basic" class="headerlink" title="Basic"></a>Basic</h2><ul>
+<li>explore intrinsic class details at runtime</li>
+<li>dynamically create new class instances (without the explicit usage of the new operator)</li>
+<li>dynamically invoke methods</li>
+<li>introspect annotations</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Method[] methods = String.class.getMethods();</span><br><span class="line">Filed[] fields = String.class.getFields();</span><br><span class="line">Constructor&lt;String&gt; constructor = String.class.getConstructor(String.class);</span><br><span class="line">method.invoke(obj, args);</span><br><span class="line">Annotation annotation = A.class.getAnnotation(Annotation.class);</span><br></pre></td></tr></table></figure>
+<h3 id="Working-with-generic"><a href="#Working-with-generic" class="headerlink" title="Working with generic"></a>Working with generic</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ParameterizedTypeExample</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt; String &gt; strings;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> List&lt; String &gt; getStrings() &#123;</span><br><span class="line">        <span class="keyword">return</span> strings;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">final</span> Type type = ParameterizedTypeExample.class</span><br><span class="line">    .getDeclaredField( <span class="string">&quot;strings&quot;</span> ).getGenericType();</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span>( type <span class="keyword">instanceof</span> ParameterizedType ) &#123;</span><br><span class="line">    <span class="keyword">final</span> ParameterizedType parameterizedType = ( ParameterizedType )type;</span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">final</span> Type typeArgument: parameterizedType.getActualTypeArguments() ) &#123;</span><br><span class="line">        System.out.println( typeArgument );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref"></a>Ref</h3><p><a target="_blank" rel="noopener" href="https://www.oracle.com/technical-resources/articles/java/javareflection.html">oracle</a></p>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/37628/what-is-reflection-and-why-is-it-useful">stack</a></p>
 
@@ -301,7 +310,7 @@ manipulation is make modification at runtime.
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflection"><span class="nav-number">1.</span> <span class="nav-text">Reflection</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Ref"><span class="nav-number">1.0.1.</span> <span class="nav-text">Ref</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Reflection"><span class="nav-number">1.</span> <span class="nav-text">Reflection</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic"><span class="nav-number">1.1.</span> <span class="nav-text">Basic</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Working-with-generic"><span class="nav-number">1.1.1.</span> <span class="nav-text">Working with generic</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ref"><span class="nav-number">1.1.2.</span> <span class="nav-text">Ref</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -315,20 +324,20 @@ manipulation is make modification at runtime.
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">65</span>
+          <span class="site-state-item-count">70</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
