@@ -43,7 +43,7 @@ categories:
 
 
 
-2. Method Area (java 8 MetaSpace)
+2. Method Area
 
     > stores class structure 
     - metadata
@@ -172,8 +172,12 @@ G1 collector partitions the heap into a set of equal-sized heap regions, each a 
 
 
 ### Ref
-[jvm architecture](https://www.guru99.com/java-virtual-machine-jvm.html)
+- [jvm architecture](https://www.guru99.com/java-virtual-machine-jvm.html)
 
-[jvm](https://www.betsol.com/blog/java-memory-management-for-java-virtual-machine-jvm/)
+- [jvm](https://www.betsol.com/blog/java-memory-management-for-java-virtual-machine-jvm/)
+- [another jvm](https://www.freecodecamp.org/news/jvm-tutorial-java-virtual-machine-architecture-explained-for-beginners/)
 
-[Gc](https://www.geeksforgeeks.org/garbage-collection-java/)
+- [Gc](https://www.geeksforgeeks.org/garbage-collection-java/)
+- [another gc](https://www.freecodecamp.org/news/garbage-collection-in-java-what-is-gc-and-how-it-works-in-the-jvm/)
+- [Gc Basic oracle](https://www.oracle.com/webfolder/technetwork/tutorials/obe/java/gc01/index.html)
+
