@@ -226,9 +226,16 @@
 </ul>
 </li>
 </ol>
+<p>there is a simple explain</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">wget https://go.dev/dl/go1.19.1.linux-amd64.tar.gz</span><br><span class="line"></span><br><span class="line">directory <span class="keyword">for</span> go related things: ~/programming/go</span><br><span class="line">directory <span class="keyword">for</span> go compiler/tools: ~/programming/go/go-1.4</span><br><span class="line">directory <span class="keyword">for</span> go software      : ~/programming/go/packages</span><br><span class="line">GOROOT, GOPATH, PATH are <span class="built_in">set</span> as following:</span><br><span class="line"><span class="built_in">export</span> GOROOT=/home/user/programming/go/go-1.4</span><br><span class="line"><span class="built_in">export</span> GOPATH=/home/user/programming/go/packages</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$GOROOT</span>/bin:<span class="variable">$GOPATH</span>/bin</span><br></pre></td></tr></table></figure>
+
+
+
 <h1 id="GOROOT-amp-amp-GOPATH-amp-amp-GOMODULE"><a href="#GOROOT-amp-amp-GOPATH-amp-amp-GOMODULE" class="headerlink" title="GOROOT &amp;&amp; GOPATH &amp;&amp; GOMODULE"></a>GOROOT &amp;&amp; GOPATH &amp;&amp; GOMODULE</h1><h2 id="GOROOT"><a href="#GOROOT" class="headerlink" title="GOROOT"></a>GOROOT</h2><p>I think it is the source code directory.<br>where compiler and standard libraries exist.<br>it is always the installation directory.</p>
 <h2 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h2><p><code>Workspace directory</code> where go code belongs.<br>if no GOPATH set, it will default to a subdirectory<br>named <code>go</code> in the user’s home direcory -&gt; <code>~/go</code>  </p>
 <h2 id="GOMODULE"><a href="#GOMODULE" class="headerlink" title="GOMODULE"></a>GOMODULE</h2><p><code>Module</code> is a collection <code>package</code><br><code>go mod init foo/bar</code></p>
+<p><code>go.mod go.sum</code></p>
+<h2 id="Relation"><a href="#Relation" class="headerlink" title="Relation"></a>Relation</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/7970390/what-should-be-the-values-of-gopath-and-goroot">stackoverflow</a></p>
 
     </div>
 
@@ -312,7 +319,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Installation"><span class="nav-number">1.</span> <span class="nav-text">Installation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GOROOT-amp-amp-GOPATH-amp-amp-GOMODULE"><span class="nav-number">2.</span> <span class="nav-text">GOROOT &amp;&amp; GOPATH &amp;&amp; GOMODULE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GOROOT"><span class="nav-number">2.1.</span> <span class="nav-text">GOROOT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GOPATH"><span class="nav-number">2.2.</span> <span class="nav-text">GOPATH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GOMODULE"><span class="nav-number">2.3.</span> <span class="nav-text">GOMODULE</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Installation"><span class="nav-number">1.</span> <span class="nav-text">Installation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GOROOT-amp-amp-GOPATH-amp-amp-GOMODULE"><span class="nav-number">2.</span> <span class="nav-text">GOROOT &amp;&amp; GOPATH &amp;&amp; GOMODULE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GOROOT"><span class="nav-number">2.1.</span> <span class="nav-text">GOROOT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GOPATH"><span class="nav-number">2.2.</span> <span class="nav-text">GOPATH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GOMODULE"><span class="nav-number">2.3.</span> <span class="nav-text">GOMODULE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Relation"><span class="nav-number">2.4.</span> <span class="nav-text">Relation</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -333,13 +340,13 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
