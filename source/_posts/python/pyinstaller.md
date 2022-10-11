@@ -1,3 +1,13 @@
+---
+title: Python Installer
+description: python Installer for package
+date: 2022-10-09 09:54:09
+tags:
+- python
+categories:
+- python
+---
+
 # Python Installer For Windows
 
 ## background

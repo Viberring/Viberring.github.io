@@ -24,6 +24,18 @@ like `$HOME/xxx/xxx`
         `export GO111MODULE=on` 
         `export GOPROXY=https://goproxy.cn`
 
+there is a simple explain
+```sh
+wget https://go.dev/dl/go1.19.1.linux-amd64.tar.gz
+
+directory for go related things: ~/programming/go
+directory for go compiler/tools: ~/programming/go/go-1.4
+directory for go software      : ~/programming/go/packages
+GOROOT, GOPATH, PATH are set as following:
+export GOROOT=/home/user/programming/go/go-1.4
+export GOPATH=/home/user/programming/go/packages
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+```
 
 
 
@@ -42,3 +54,10 @@ named `go` in the user's home direcory -> `~/go`
 ## GOMODULE
 `Module` is a collection `package`  
 `go mod init foo/bar`
+
+```go.mod go.sum```
+
+
+
+## Relation
+[stackoverflow](https://stackoverflow.com/questions/7970390/what-should-be-the-values-of-gopath-and-goroot)
