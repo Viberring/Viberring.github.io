@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"viberring.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="the usage of interface as method">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Interface In Go -- method aspect">
+<meta property="og:url" content="https://viberring.github.io/2023/01/10/go/go-interface/index.html">
+<meta property="og:site_name" content="viber">
+<meta property="og:description" content="the usage of interface as method">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-01-10T08:10:00.000Z">
+<meta property="article:modified_time" content="2023-01-10T08:10:00.000Z">
+<meta property="article:author" content="viber">
+<meta property="article:tag" content="go">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://viberring.github.io/2023/01/10/go/go-interface/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Interface In Go -- method aspect | viber</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">viber</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">the way to the future</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://viberring.github.io/2023/01/10/go/go-interface/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="viber">
+      <meta itemprop="description" content="rest in peace">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="viber">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Interface In Go -- method aspect
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-01-10 16:10:00" itemprop="dateCreated datePublished" datetime="2023-01-10T16:10:00+08:00">2023-01-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">the usage of interface as method</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Interface"><a href="#Interface" class="headerlink" title="Interface"></a>Interface</h1><p>So what is an interface? </p>
+<p>An interface is two things: </p>
+<ul>
+<li>it is a set of methods</li>
+<li>it is also a type. </li>
+</ul>
+<p>This article explains the basic usage of <code>interface</code> as <code>a set of methods</code> in go.</p>
+<p>To be familiar with <code>interface</code>, we need to know one things:</p>
+<ul>
+<li>The purpose of interface’s usage</li>
+</ul>
+<h2 id="A-Brief-Summary"><a href="#A-Brief-Summary" class="headerlink" title="A Brief Summary"></a>A Brief Summary</h2><ul>
+<li>An <code>interface</code> is some kind of contract for what can do with it.</li>
+<li>An <code>interface</code> provides a form, a protocol, a standard, a contract, a specification, a set of rules, an interface</li>
+<li>An <code>interface</code> is a specification and rules that any <code>struct</code> implementing it agrees to follow.</li>
+</ul>
+<h2 id="Basic"><a href="#Basic" class="headerlink" title="Basic"></a>Basic</h2><h3 id="Let’s-start-with-a-simple-example"><a href="#Let’s-start-with-a-simple-example" class="headerlink" title="Let’s start with a simple example"></a>Let’s start with a simple example</h3><table>
+<tr>
+<th> GO </th>
+<th> Java </th>
+</tr>
+<tr>
+<td>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"><span class="keyword">type</span> Flyable <span class="keyword">interface</span> &#123;</span><br><span class="line">	fly()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> Man <span class="keyword">struct</span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m Man)</span> <span class="title">fly</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot; man can not fly &quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fly</span><span class="params">(f Flyable)</span></span> &#123;</span><br><span class="line">	f.fly()</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	man := Man&#123;&#125;</span><br><span class="line">	fly(man)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>A <code>Flyable</code> is a <code>interface</code> with a <code>fly()</code> method signature.</p>
+<p>A <code>Man</code> is a <code>struct</code> which implements the <code>fly()</code> method with <code>value receiver</code>.</p>
+<p>A <code>fly(f Flyable)</code> is a <code>func</code> which receive a <code>Flyable interface</code>.</p>
+<p>When we call <code>fly(man)</code>, the method will implicitly call <code>the fly() method</code><br>of <code>Man</code>‘s.</p>
+</td>
+<td>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Flyable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Man</span> <span class="keyword">implements</span> <span class="title">Flyable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot; I can not fly &quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">fly</span><span class="params">(Flyable f)</span> </span>&#123;</span><br><span class="line">        f.fly();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Man man = <span class="keyword">new</span> Man();</span><br><span class="line">        fly(man);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The purpose of <code>interface</code> is the same, and <code>go</code> choose a different way to<br>power <code>oop</code> to itself.</p>
+</td>
+</tr>
+</table>
+
+
+<h2 id="Value-receiver-amp-amp-Pointer-receiver"><a href="#Value-receiver-amp-amp-Pointer-receiver" class="headerlink" title="Value receiver &amp;&amp; Pointer receiver"></a>Value receiver &amp;&amp; Pointer receiver</h2><p>As we can follow up the example</p>
+<table>
+<tr>
+<th> value receiver </th>
+<th> pointer receiver </th>
+</tr>
+<tr>
+<td>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"><span class="keyword">type</span> Flyable <span class="keyword">interface</span> &#123;</span><br><span class="line">	fly()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> Man <span class="keyword">struct</span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m Man)</span> <span class="title">fly</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot; man can not fly &quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fly</span><span class="params">(f Flyable)</span></span> &#123;</span><br><span class="line">	f.fly()</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	man := Man&#123;&#125;</span><br><span class="line">	fly(man)</span><br><span class="line">    manptr := &amp;Man&#123;&#125;</span><br><span class="line">    fly(manptr)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</td>
+<td>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"><span class="keyword">type</span> Flyable <span class="keyword">interface</span> &#123;</span><br><span class="line">	fly()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> Man <span class="keyword">struct</span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *Man)</span> <span class="title">fly</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot; man can not fly &quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fly</span><span class="params">(f Flyable)</span></span> &#123;</span><br><span class="line">	f.fly()</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// man := Man&#123;&#125;</span></span><br><span class="line">	<span class="comment">// fly(man)</span></span><br><span class="line">    manptr := &amp;Man&#123;&#125;</span><br><span class="line">    fly(manptr)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</td>
+</tr>
+</table>
+
+<p>As we can see <code>pointer receiver</code> can fit into both scenario, while<br><code>value receiver</code> can not fit into <code>pointer receiver</code>.</p>
+<h3 id="Why-we-need-two-type-receiver"><a href="#Why-we-need-two-type-receiver" class="headerlink" title="Why we need two type receiver"></a>Why we need two type receiver</h3><blockquote>
+<p>Methods with pointer receivers can modify the value to which the receiver points</p>
+</blockquote>
+<h2 id="Embedding-In-Go"><a href="#Embedding-In-Go" class="headerlink" title="Embedding In Go"></a>Embedding In Go</h2><p>As Embedding explained in <a target="_blank" rel="noopener" href="https://go.dev/doc/effective_go#embedding">effective go</a></p>
+<p>Go does not provide the typical, type-driven notion of subclassing,<br>but it does have the ability to “borrow” pieces of an implementation<br>by embedding types within a struct or interface.</p>
+<h3 id="Interface-In-Interface"><a href="#Interface-In-Interface" class="headerlink" title="Interface In Interface"></a>Interface In Interface</h3><table>
+<tr>
+<th> Go </th>
+<th> Java </th>
+</tr>
+<tr>
+<td>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"><span class="keyword">type</span> Flyable <span class="keyword">interface</span> &#123;</span><br><span class="line">	fly()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> Shootable <span class="keyword">interface</span> &#123;</span><br><span class="line">    shoot()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> FlyShoot <span class="keyword">interface</span> &#123;</span><br><span class="line">    Flyable</span><br><span class="line">    Shootable</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> SuperMan <span class="keyword">struct</span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Man)</span> <span class="title">fly</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot; superman fly &quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Man)</span> <span class="title">shoot</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">&quot; superman shoot &quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">flyshoot</span><span class="params">(fs FlyShoot)</span></span> &#123;</span><br><span class="line">    fs.fly()</span><br><span class="line">    fs.shoot()</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    superman := &amp;SuperMan&#123;&#125;</span><br><span class="line">    flyshoot(superman)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</td>
+<td>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Flyable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Shootable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">shoot</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">FlyShoot</span> <span class="keyword">extends</span> <span class="title">Flyable</span>, <span class="title">Shootable</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperMan</span> <span class="keyword">implements</span> <span class="title">FlyShoot</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot; superman fly &quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shoot</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot; superman shoot &quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">flyshoot</span><span class="params">(FlyShoot fs)</span> </span>&#123;</span><br><span class="line">        fs.fly();</span><br><span class="line">        fs.shoot();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SuperMan superman = <span class="keyword">new</span> SuperMan();</span><br><span class="line">        fly(superman);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</td>
+</tr>
+</table>
+
+<p>Once again, go use it’s own way to power the <code>oop</code> ability.</p>
+<h3 id="Interface-In-Struct"><a href="#Interface-In-Struct" class="headerlink" title="Interface In Struct"></a>Interface In Struct</h3><table>
+<tr>
+<th> Anonymouse </th>
+<th> Explicit </th>
+</tr>
+<tr>
+<td>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Flyable <span class="keyword">interface</span> &#123;</span><br><span class="line">	fly()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> FlyMan <span class="keyword">struct</span> &#123;</span><br><span class="line">	name <span class="keyword">string</span></span><br><span class="line">	Flyable</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> eagle <span class="keyword">struct</span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(e eagle)</span> <span class="title">fly</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot; &gt;&gt;&gt; fly like eagle &lt;&lt;&lt; &quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fly</span><span class="params">(o Flyable)</span></span> &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot; &gt;&gt;&gt; o: %+v \n&quot;</span>, o)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> otherMan <span class="keyword">struct</span> &#123;</span><br><span class="line">	Flyable</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	e := eagle&#123;&#125;</span><br><span class="line">	s := FlyMan&#123;</span><br><span class="line">		Flyable: e,</span><br><span class="line">		name: <span class="string">&quot;eagle man&quot;</span>,</span><br><span class="line">	&#125;</span><br><span class="line">	fly(s)</span><br><span class="line">	s.fly()</span><br><span class="line"></span><br><span class="line">	o := otherMan&#123;s&#125;</span><br><span class="line">	fly(o)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</td>
+
+<td>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Flyable <span class="keyword">interface</span> &#123;</span><br><span class="line">	fly()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> FlyMan <span class="keyword">struct</span> &#123;</span><br><span class="line">	name <span class="keyword">string</span></span><br><span class="line">	fly Flyable</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> eagle <span class="keyword">struct</span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(e eagle)</span> <span class="title">fly</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot; &gt;&gt;&gt; fly like eagle &lt;&lt;&lt; &quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fly</span><span class="params">(o Flyable)</span></span> &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot; &gt;&gt;&gt; o: %+v \n&quot;</span>, o)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	e := eagle&#123;&#125;</span><br><span class="line">	ss := FlyMan&#123;</span><br><span class="line">		name: <span class="string">&quot;eagle man&quot;</span>,</span><br><span class="line">		fly: e,</span><br><span class="line">	&#125;</span><br><span class="line">	fly(ss.fly)</span><br><span class="line">	ss.fly.fly()	</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</td>
+
+</tr>
+</table>
+
+<h3 id="Compare-to-OOP"><a href="#Compare-to-OOP" class="headerlink" title="Compare to OOP"></a>Compare to OOP</h3><table>
+<tr>
+<th> Go </th>
+<th> Java </th>
+</tr>
+<tr>
+<td>
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Flyable <span class="keyword">interface</span> &#123;</span><br><span class="line">	fly()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> FlyMan <span class="keyword">struct</span> &#123;</span><br><span class="line">	name <span class="keyword">string</span></span><br><span class="line">	Flyable</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> bird <span class="keyword">struct</span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(b *bird)</span> <span class="title">fly</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot; &gt;&gt;&gt; fly like bird &lt;&lt;&lt; &quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> eagle <span class="keyword">struct</span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(e *eagle)</span> <span class="title">fly</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot; &gt;&gt;&gt; fly like eagle &lt;&lt;&lt; &quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">fly</span><span class="params">(o Flyable)</span></span> &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot; &gt;&gt;&gt; o: %+v \n&quot;</span>, o)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	</span><br><span class="line">    b := &amp;bird&#123;&#125;	</span><br><span class="line">    e := &amp;eagle&#123;&#125;</span><br><span class="line"></span><br><span class="line">	s := &amp;FlyMan&#123;</span><br><span class="line">		Flyable: b,</span><br><span class="line">		name: <span class="string">&quot;Kobe&quot;</span>,</span><br><span class="line">	&#125;</span><br><span class="line">	fly(s)</span><br><span class="line">	s.fly()</span><br><span class="line">	fmt.Println(<span class="string">&quot; change fly sytle &quot;</span>)</span><br><span class="line"></span><br><span class="line">    s.Flyable = e</span><br><span class="line">    fly(s)</span><br><span class="line">	s.fly()</span><br><span class="line"></span><br><span class="line">	fmt.Println(<span class="string">&quot;==============&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</td>
+
+<td>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Flyable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bird</span> <span class="keyword">implements</span> <span class="title">Flyable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot; &gt;&gt;&gt; fly like bird &lt;&lt;&lt; &quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Eagle</span> <span class="keyword">implements</span> <span class="title">Flyable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot; &gt;&gt;&gt; fly like eagle &lt;&lt;&lt; &quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Flyable fly;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Flyable bird = <span class="keyword">new</span> Bird();</span><br><span class="line">        fly = bird;</span><br><span class="line">        fly.fly();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot; change fly sytle &quot;</span>);</span><br><span class="line"></span><br><span class="line">        Flyable eagle = <span class="keyword">new</span> Eagle();</span><br><span class="line">        fly = eagle;</span><br><span class="line">        fly.fly();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</td>
+
+</tr>
+</table>
+
+
+<h3 id="LINK-TO-GO-REFERENCES-amp-RESOURCES"><a href="#LINK-TO-GO-REFERENCES-amp-RESOURCES" class="headerlink" title="LINK TO GO REFERENCES &amp; RESOURCES"></a>LINK TO GO REFERENCES &amp; RESOURCES</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://go.dev/tour/methods/4">https://go.dev/tour/methods/4</a></li>
+<li><a target="_blank" rel="noopener" href="https://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go">https://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go</a></li>
+<li><a target="_blank" rel="noopener" href="https://research.swtch.com/interfaces">https://research.swtch.com/interfaces</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/go/" rel="tag"># go</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/01/12/go/interface-value/" rel="prev" title="Interface In Go -- value aspect">
+      <i class="fa fa-chevron-left"></i> Interface In Go -- value aspect
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/12/01/go/go-db/" rel="next" title="Go DB">
+      Go DB <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Interface"><span class="nav-number">1.</span> <span class="nav-text">Interface</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#A-Brief-Summary"><span class="nav-number">1.1.</span> <span class="nav-text">A Brief Summary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic"><span class="nav-number">1.2.</span> <span class="nav-text">Basic</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Let%E2%80%99s-start-with-a-simple-example"><span class="nav-number">1.2.1.</span> <span class="nav-text">Let’s start with a simple example</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Value-receiver-amp-amp-Pointer-receiver"><span class="nav-number">1.3.</span> <span class="nav-text">Value receiver &amp;&amp; Pointer receiver</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-we-need-two-type-receiver"><span class="nav-number">1.3.1.</span> <span class="nav-text">Why we need two type receiver</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Embedding-In-Go"><span class="nav-number">1.4.</span> <span class="nav-text">Embedding In Go</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Interface-In-Interface"><span class="nav-number">1.4.1.</span> <span class="nav-text">Interface In Interface</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Interface-In-Struct"><span class="nav-number">1.4.2.</span> <span class="nav-text">Interface In Struct</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compare-to-OOP"><span class="nav-number">1.4.3.</span> <span class="nav-text">Compare to OOP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LINK-TO-GO-REFERENCES-amp-RESOURCES"><span class="nav-number">1.4.4.</span> <span class="nav-text">LINK TO GO REFERENCES &amp; RESOURCES</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">viber</p>
+  <div class="site-description" itemprop="description">rest in peace</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">84</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">viber</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
